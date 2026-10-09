@@ -1,0 +1,202 @@
+{
+  "beer_fountain": {
+    "Category": "Buff",
+    "Reset": "OnStartDay",
+    "Visit": "EachHeroOneTime"
+  },
+  "mysterious_stone": {
+    "Category": "Buff",
+    "Reset": "OnStartWeek",
+    "Visit": "EachHeroOneTime"
+  },
+  "pile_of_books": {
+    "Category": "Buff",
+    "Reset": "OnStartWeek",
+    "Visit": "EachHeroOneTime"
+  },
+  "quixs_path": {
+    "Category": "Buff",
+    "Reset": "OnStartWeek",
+    "Visit": "EachHeroOneTime"
+  },
+  "stables": {
+    "Category": "Buff",
+    "Reset": "OnStartWeek",
+    "Visit": "EachHeroOneTime"
+  },
+  "learning_stone": {
+    "Category": "Experience",
+    "Reset": "None",
+    "Visit": "EachHeroOneTime"
+  },
+  "tree_of_knowledge": {
+    "Category": "Experience",
+    "Reset": "None",
+    "Visit": "EachHeroOneTime"
+  },
+  "underground_lair": {
+    "Category": "Reward",
+    "Reset": "visitorsResetType",
+    "Visit": "OneTime"
+  },
+  "crystal_trail": {
+    "Category": "Buff",
+    "Reset": "OnStartDay",
+    "Visit": "EachHeroOneTime"
+  },
+  "fountain": {
+    "Category": "Buff",
+    "Reset": "OnStartDay",
+    "Visit": "EachHeroOneTime"
+  },
+  "fountain_2": {
+    "Category": "Buff",
+    "Reset": "OnStartDay",
+    "Visit": "EachHeroOneTime"
+  },
+  "huntsmans_camp": {
+    "Category": "Buff",
+    "Reset": "OnStartDay",
+    "Visit": "EachHeroOneTime"
+  },
+  "tear_of_truth": {
+    "Category": "Buff",
+    "Reset": "OnStartWeek",
+    "Visit": "EachHeroOneTime"
+  },
+  "altar_of_magic_1": {
+    "Category": "Magic",
+    "Reset": "None",
+    "Visit": "EachHeroOneTime"
+  },
+  "altar_of_magic_2": {
+    "Category": "Magic",
+    "Reset": "None",
+    "Visit": "EachHeroOneTime"
+  },
+  "altar_of_magic_3": {
+    "Category": "Magic",
+    "Reset": "None",
+    "Visit": "EachHeroOneTime"
+  },
+  "altar_of_magic_4": {
+    "Category": "Magic",
+    "Reset": "None",
+    "Visit": "EachHeroOneTime"
+  },
+  "gardener": {
+    "Category": "Resources",
+    "Reset": "OnStartWeek",
+    "Visit": "OneTime"
+  },
+  "gingerbread_house": {
+    "Category": "Resources",
+    "Reset": "OnStartWeek",
+    "Visit": "OneTime"
+  },
+  "storage_crystals": {
+    "Category": "Resources",
+    "Reset": "OnStartWeek",
+    "Visit": "OneTime"
+  },
+  "storage_dust": {
+    "Category": "Resources",
+    "Reset": "OnStartWeek",
+    "Visit": "OneTime"
+  },
+  "storage_gemstones": {
+    "Category": "Resources",
+    "Reset": "OnStartWeek",
+    "Visit": "OneTime"
+  },
+  "storage_gold": {
+    "Category": "Resources",
+    "Reset": "OnStartWeek",
+    "Visit": "OneTime"
+  },
+  "storage_mercury": {
+    "Category": "Resources",
+    "Reset": "OnStartWeek",
+    "Visit": "OneTime"
+  },
+  "storage_ore": {
+    "Category": "Resources",
+    "Reset": "OnStartWeek",
+    "Visit": "OneTime"
+  },
+  "storage_wood": {
+    "Category": "Resources",
+    "Reset": "OnStartWeek",
+    "Visit": "OneTime"
+  },
+  "village": {
+    "Category": "Resources",
+    "Reset": "OnStartWeek",
+    "Visit": "OneTime"
+  },
+  "windmill": {
+    "Category": "Resources",
+    "Reset": "OnStartWeek",
+    "Visit": "OneTime"
+  },
+  "circus": {
+    "Category": "Skill",
+    "Reset": "None",
+    "Visit": "EachHeroOneTime"
+  },
+  "wise_owl": {
+    "Category": "Skill",
+    "Reset": "None",
+    "Visit": "EachHeroOneTime"
+  },
+  "armory_automaton": {
+    "Category": "Stats",
+    "Reset": "None",
+    "Visit": "EachHeroOneTime"
+  },
+  "college_of_wonder": {
+    "Category": "Stats",
+    "Reset": "None",
+    "Visit": "EachHeroOneTime"
+  },
+  "fort": {
+    "Category": "Stats",
+    "Reset": "None",
+    "Visit": "EachHeroOneTime"
+  },
+  "knowledge_garden": {
+    "Category": "Stats",
+    "Reset": "None",
+    "Visit": "EachHeroOneTime"
+  },
+  "magic_wheel": {
+    "Category": "Stats",
+    "Reset": "None",
+    "Visit": "EachHeroOneTime"
+  },
+  "maze": {
+    "Category": "Stats",
+    "Reset": "None",
+    "Visit": "EachHeroOneTime"
+  },
+  "orb_observatory": {
+    "Category": "Stats",
+    "Reset": "None",
+    "Visit": "EachHeroOneTime"
+  },
+  "stinging_sword": {
+    "Category": "Stats",
+    "Reset": "None",
+    "Visit": "EachHeroOneTime"
+  },
+  "trial_scales": {
+    "Category": "Stats",
+    "Reset": "None",
+    "Visit": "EachHeroOneTime"
+  },
+  "mana_well": {
+    "Category": "Mana",
+    "Reset": "None",
+    "Visit": "Unlimited"
+  }
+}
