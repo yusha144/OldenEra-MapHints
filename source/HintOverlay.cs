@@ -61,7 +61,7 @@ public sealed partial class HintOverlay : MonoBehaviour
     {
         try
         {
-            if (Input.GetKeyDown(KeyCode.F8))
+            if (Plugin.Instance.CycleKey.Value.IsDown())
             {
                 var mode = Plugin.Instance.Mode;
                 mode.Value = (DisplayMode)(((int)mode.Value + 1) % 3);
@@ -246,14 +246,6 @@ public sealed partial class HintOverlay : MonoBehaviour
             if (_skillPreview != null && Plugin.Instance.Mode.Value != DisplayMode.Off
                 && Time.unscaledTime - _hoverSince >= 0.18f && ReadHover(fbu.me) == _skillPreview.HoverPointer)
                 DrawSkillPreview(_skillPreview, mouse, scale);
-            GUI.color = Color.white;
-            if (Plugin.Instance.Legend.Value)
-            {
-                string mode = Plugin.Instance.Mode.Value switch { DisplayMode.All => "все", DisplayMode.Available => "доступные", _ => "выкл." };
-                _smallStyle!.fontSize = Mathf.RoundToInt(12 * scale);
-                var legendRect = new Rect(16 * scale, 90 * scale, 290 * scale, 24 * scale);
-                if (!OverlapsGameUi(legendRect)) GUI.Label(legendRect, $"Подсветка: {mode}   ·   F8", _smallStyle);
-            }
             GUI.color = Color.white;
         }
         catch (Exception error)

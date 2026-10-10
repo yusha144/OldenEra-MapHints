@@ -5,7 +5,8 @@
     <Nullable>disable</Nullable>
     <LangVersion>latest</LangVersion>
     <AssemblyName>OldenEra.MapHints</AssemblyName>
-    <Version>0.3.6</Version>
+    <Version>0.3.7</Version>
+    <Authors>yusha144</Authors><Description>Olden Era Map Hints. Author: yusha144.</Description>
     <GameRoot Condition="'$(GameRoot)' == ''">E:\Steam_M2\steamapps\common\Heroes of Might and Magic Olden Era</GameRoot>
   </PropertyGroup>
   <ItemGroup>

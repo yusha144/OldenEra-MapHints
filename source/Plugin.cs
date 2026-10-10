@@ -1,11 +1,12 @@
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Unity.IL2CPP;
+using BepInEx.Unity.IL2CPP.Configuration;
 using System.Security.Cryptography;
 
 namespace OldenEra.MapHints;
 
-[BepInPlugin("local.oldenera.maphints", "Olden Era Map Hints", "0.3.6")]
+[BepInPlugin("local.oldenera.maphints", "Olden Era Map Hints", "0.3.7")]
 public sealed class Plugin : BasePlugin
 {
     internal static Plugin Instance = null!;
@@ -13,7 +14,7 @@ public sealed class Plugin : BasePlugin
     internal ConfigEntry<DisplayMode> Mode = null!;
     internal ConfigEntry<int> Size = null!;
     internal ConfigEntry<float> MarkerScale = null!;
-    internal ConfigEntry<bool> Legend = null!;
+    internal ConfigEntry<KeyboardShortcut> CycleKey = null!;
     internal ConfigEntry<bool> Diagnostics = null!;
     internal ConfigEntry<bool> SkillHover = null!;
     internal ConfigEntry<bool> WellPulse = null!;
@@ -24,7 +25,7 @@ public sealed class Plugin : BasePlugin
     {
         Instance = this;
         Enabled = Config.Bind("Display", "Enabled", true, "Enable the local map overlay.");
-        Mode = Config.Bind("Display", "Mode", DisplayMode.All, "All: show used objects dimmed; Available: ready rewards only; Off: hide. F8 cycles modes.");
+        Mode = Config.Bind("Display", "Mode", DisplayMode.All, "All: show used objects dimmed; Available: ready rewards only; Off: hide. Hotkey: yusha144.hotkeys.cfg.");
         Size = Config.Bind("Display", "IconSize", 32, new ConfigDescription("Icon diameter in pixels at 1080p.", new AcceptableValueRange<int>(20, 64)));
         MarkerScale = Config.Bind("Display", "MarkerScale", MarkerSizing.DefaultScale, new ConfigDescription("Scale map markers, their rings, glow and badges together. 0.84 is 20 percent larger than the previous 0.7 scale.", new AcceptableValueRange<float>(0.35f, 1.5f)));
         var visualRevision = Config.Bind("Internal", "VisualRevision", 0, "Tracks one-time migration of the old marker size.");
@@ -33,7 +34,7 @@ public sealed class Plugin : BasePlugin
             MarkerScale.Value = MarkerSizing.Upgrade(MarkerScale.Value, visualRevision.Value);
             visualRevision.Value = 1;
         }
-        Legend = Config.Bind("Display", "ShowLegend", true, "Show a small F8 legend on the adventure map.");
+        CycleKey = HotkeySettings.Load("MapHints");
         Diagnostics = Config.Bind("Diagnostics", "LogStateChanges", false, "Log local hero and visible marker counts, without player names or save contents.");
         SkillHover = Config.Bind("Display", "SkillHoverPreview", true, "Show offered skills only while hovering over a skill building.");
         WellPulse = Config.Bind("Display", "PulseManaWells", true, "Gently pulse mana wells when the selected hero is missing mana.");
@@ -45,7 +46,7 @@ public sealed class Plugin : BasePlugin
             return;
         }
         AddComponent<HintOverlay>();
-        Log.LogInfo($"Map Hints 0.3.6 loaded. Marker scale={MarkerScale.Value}; outlined gold choice separators enabled. F8 cycles All / Available / Off.");
+        Log.LogInfo($"Map Hints 0.3.7 by yusha144 loaded. Marker scale={MarkerScale.Value}; map legend removed. {CycleKey.Value} cycles All / Available / Off; configure yusha144.hotkeys.cfg.");
     }
 
     private static bool Matches(string path, string expected)
