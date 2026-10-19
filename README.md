@@ -4,6 +4,8 @@
 
 **Версия 0.3.12.** Windows x64, Steam build 25672315, Unity 6000.0.66, BepInEx Unity.IL2CPP 6.0.0-be.788.
 
+[Скачать установщик 0.3.12](https://github.com/yusha144/OldenEra-MapHints/releases/download/v0.3.12/OldenEra-MapHints-0.3.12.zip) · [Все выпуски](https://github.com/yusha144/OldenEra-MapHints/releases)
+
 [Установка и удаление](docs/installation.md) · [Настройки](docs/settings.md) · [Обратная связь](docs/feedback.md)
 
 ## Что показывает мод
