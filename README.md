@@ -6,6 +6,8 @@
 
 [Скачать установщик 0.3.12](https://github.com/yusha144/OldenEra-MapHints/releases/download/v0.3.12/OldenEra-MapHints-0.3.12.zip) · [Все выпуски](https://github.com/yusha144/OldenEra-MapHints/releases)
 
+Полностью распакуйте установочный архив и запустите `Install.bat` из корня, рядом с папкой `_files`. Кнопка `Code / Download ZIP` и ссылки `Source code` скачивают исходники для разработки.
+
 [Установка и удаление](docs/installation.md) · [Настройки](docs/settings.md) · [Обратная связь](docs/feedback.md)
 
 ## Что показывает мод
