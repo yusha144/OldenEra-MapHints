@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings></PropertyGroup>
+  <ItemGroup><Compile Include="../../source/VisitRules.cs" Link="VisitRules.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../../source/InterfaceVisibilityRules.cs" Link="InterfaceVisibilityRules.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../../source/ResourceIconRules.cs" Link="ResourceIconRules.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../../source/RewardKnowledgeRules.cs" Link="RewardKnowledgeRules.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../../source/TooltipOcclusionRules.cs" Link="TooltipOcclusionRules.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../../source/MarkerSizing.cs" Link="MarkerSizing.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../../source/BuffHintRules.cs" Link="BuffHintRules.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../../source/StatIconRules.cs" Link="StatIconRules.cs" /></ItemGroup>
+</Project>

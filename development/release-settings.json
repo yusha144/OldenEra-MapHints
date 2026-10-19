@@ -3,7 +3,7 @@
   "mod": "MapHints",
   "repository": "yusha144/OldenEra-MapHints",
   "project": "source/MapHints.csproj",
-  "tests": "tests/Tests.csproj",
+  "tests": "development/tests/Tests.csproj",
   "steamBuild": "25672315",
   "loader": "BepInEx Unity.IL2CPP win-x64 6.0.0-be.788",
   "downloads": [

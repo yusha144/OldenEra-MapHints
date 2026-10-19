@@ -1,8 +1,8 @@
 ﻿$ErrorActionPreference = 'Stop'
-$repo = Split-Path -Parent $PSScriptRoot
+$repo = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 . (Join-Path $repo 'installer/Installer.Core.ps1')
 . (Join-Path $repo 'installer/Dependencies.ps1')
-$testRoot = Join-Path $repo ('work/installer-tests/Проверка ! ' + [Guid]::NewGuid().ToString('N'))
+$testRoot = Join-Path $repo ('development/artifacts/installer-tests/Проверка ! ' + [Guid]::NewGuid().ToString('N'))
 [IO.Directory]::CreateDirectory($testRoot) | Out-Null
 $script:checks = 0
 function Put([string]$Path, [string]$Text) {

@@ -4,7 +4,7 @@ param(
     [string]$LoaderArchive,
     [string]$UnityLibrariesArchive,
     [string]$Revision = 'HEAD',
-    [string]$OutputDirectory = (Join-Path $PSScriptRoot 'releases')
+    [string]$OutputDirectory = (Join-Path $PSScriptRoot 'artifacts/releases')
 )
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
@@ -14,24 +14,24 @@ function Run-Native {
     & $Program @Arguments
     if ($LASTEXITCODE -ne 0) { throw ($Program + ' failed: ' + $LASTEXITCODE) }
 }
-$repo = $PSScriptRoot
+$repo = Split-Path -Parent $PSScriptRoot
 $commit = & git -C $repo rev-parse --verify --end-of-options ($Revision + '^{commit}')
 if ($LASTEXITCODE -ne 0) { throw 'Revision is not a commit.' }
 $commit = $commit.Trim()
-$expectedScript = & git -C $repo rev-parse ($commit + ':Build-Release.ps1')
-if ($LASTEXITCODE -ne 0) { throw 'The selected commit does not contain Build-Release.ps1.' }
-$actualScript = & git -C $repo hash-object --path=Build-Release.ps1 $PSCommandPath
+$expectedScript = & git -C $repo rev-parse ($commit + ':development/Build-Release.ps1')
+if ($LASTEXITCODE -ne 0) { throw 'The selected commit does not contain development/Build-Release.ps1.' }
+$actualScript = & git -C $repo hash-object --path=development/Build-Release.ps1 $PSCommandPath
 if ($LASTEXITCODE -ne 0 -or $actualScript -ne $expectedScript) {
-    throw 'Use the unchanged Build-Release.ps1 from the selected commit.'
+    throw 'Use the unchanged development/Build-Release.ps1 from the selected commit.'
 }
 $game = (Resolve-Path -LiteralPath $GameRoot).Path
-$work = Join-Path $repo ('work\release-' + [guid]::NewGuid().ToString('N'))
+$work = Join-Path $PSScriptRoot ('artifacts\release-' + [guid]::NewGuid().ToString('N'))
 $snapshot = Join-Path $work 'source'
 [IO.Directory]::CreateDirectory($snapshot) | Out-Null
 $sourceZip = Join-Path $work 'source.zip'
 Run-Native 'git' @('-C', $repo, 'archive', '--format=zip', ('--output=' + $sourceZip), $commit)
 [IO.Compression.ZipFile]::ExtractToDirectory($sourceZip, $snapshot)
-$settings = Get-Content -LiteralPath (Join-Path $snapshot 'release-settings.json') -Raw | ConvertFrom-Json
+$settings = Get-Content -LiteralPath (Join-Path $snapshot 'development/release-settings.json') -Raw -Encoding UTF8 | ConvertFrom-Json
 foreach ($entry in $settings.gameFiles) {
     $file = Join-Path $game $entry.path
     if (!(Test-Path -LiteralPath $file) -or (Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash -ne $entry.sha256) {
@@ -57,7 +57,7 @@ foreach ($path in @($archive, $checksum, $record)) {
 }
 Write-Host ('Building committed snapshot: ' + $commit)
 Write-Host 'Uncommitted files are not included.'
-Run-Native 'powershell.exe' @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $snapshot 'tests/Installer.Tests.ps1'))
+Run-Native 'powershell.exe' @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $snapshot 'development/tests/Installer.Tests.ps1'))
 Run-Native 'dotnet' @('run', '--project', (Join-Path $snapshot $settings.tests), '-c', 'Release', '--', $core)
 Run-Native 'dotnet' @('build', $project, '-c', 'Release', ('-p:GameRoot=' + $game), '--nologo')
 $dll = Join-Path (Split-Path -Parent $project) ('bin\Release\' + $framework + '\' + $assembly + '.dll')
@@ -70,8 +70,7 @@ $pluginFolder = Join-Path $payload ('BepInEx\plugins\' + $settings.mod)
 [IO.Directory]::CreateDirectory($pluginFolder) | Out-Null
 Copy-Item -LiteralPath $dll -Destination $pluginFolder
 Copy-Item -LiteralPath (Join-Path $snapshot 'README.md') -Destination $package
-Copy-Item -LiteralPath (Join-Path $snapshot 'Docs') -Destination $package -Recurse
-Copy-Item -LiteralPath (Join-Path $snapshot 'ПРОЧИТАЙ.md') -Destination $package
+Copy-Item -LiteralPath (Join-Path $snapshot 'docs') -Destination $package -Recurse
 foreach ($file in @('Install.bat','Uninstall.bat')) {
     $text = [IO.File]::ReadAllText((Join-Path $snapshot ('installer/' + $file))) -replace '\r?\n', "`r`n"
     [IO.File]::WriteAllText((Join-Path $package $file), $text, [Text.Encoding]::ASCII)
@@ -124,10 +123,7 @@ $installerManifest = [ordered]@{
     gameFiles=$settings.gameFiles;downloads=$settings.downloads;files=@($payloadFiles) + @($dependencyFiles.ToArray())
 }
 [IO.File]::WriteAllText((Join-Path $package '_files/manifest.json'), ($installerManifest | ConvertTo-Json -Depth 8), [Text.UTF8Encoding]::new($false))
-foreach ($legal in @('LICENSE', 'LICENSE.md', 'LICENSE.txt', 'NOTICE', 'NOTICE.md', 'THIRD-PARTY-NOTICES.md')) {
-    $legalPath = Join-Path $snapshot $legal
-    if (Test-Path -LiteralPath $legalPath) { Copy-Item -LiteralPath $legalPath -Destination $package }
-}
+Copy-Item -LiteralPath (Join-Path $snapshot 'LICENSE') -Destination $package
 $utf8 = [Text.UTF8Encoding]::new($false)
 $files = @(Get-ChildItem -LiteralPath $package -File -Recurse | Sort-Object FullName | ForEach-Object {
     [ordered]@{
