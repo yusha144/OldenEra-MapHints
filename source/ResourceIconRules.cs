@@ -6,6 +6,7 @@ internal static class ResourceIconRules
 
     internal static string[] Resolve(IEnumerable<string> rewards, string objectId)
     {
+        if (RewardKnowledgeRules.IsRandomResource(objectId)) return Array.Empty<string>();
         var ids = (rewards ?? Array.Empty<string>()).Where(IsResource).Distinct().ToArray();
         if (ids.Length != 0) return ids;
         // Fixed storage type remains meaningful even if a consumed reward set was cleared.

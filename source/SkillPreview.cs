@@ -7,7 +7,7 @@ namespace OldenEra.MapHints;
 
 // Display metadata only. Offered skills are read from the existing reward controllers;
 // this code never generates rewards, advances randomness or opens an interaction.
-internal sealed class SkillPreview
+internal sealed class RewardPreview
 {
     internal sealed class Offer
     {
@@ -55,13 +55,21 @@ internal sealed class SkillCatalog
         }
     }
 
-    internal SkillPreview Read(fmt bank)
+    internal RewardPreview Read(fmt bank, int sideId)
     {
         var sid = bank.cowc.sidConfig;
-        var preview = new SkillPreview {
-            Title = sid switch { "university" => "Университет", "infernal_cirque" => "Зловещий театр", "wise_owl" => "Мудрая сова", _ => "Цирк" },
+        if (sid is not ("university" or "infernal_cirque" or "wise_owl")) return null;
+        var scoutings = bank.cowc.sideScoutings;
+        var acquaintedSides = scoutings == null ? null : new int[scoutings.Count];
+        if (scoutings != null)
+            for (int index = 0; index < scoutings.Count; index++) acquaintedSides[index] = scoutings[index];
+        if (!RewardKnowledgeRules.KnowsSkills(acquaintedSides, sideId)) return null;
+        var preview = new RewardPreview {
+            Title = sid switch { "university" => "Университет", "infernal_cirque" => "Зловещий театр", _ => "Мудрый сыч" },
             HoverPointer = bank.cozc?.Pointer ?? IntPtr.Zero
         };
+        // sideScoutings is filled by the native interaction, before the purchase.
+        // Never read the resolved offers until this player has acquainted the building.
         var rewards = bank.cowe?.cojj;
         int unresolved = 0;
         if (rewards != null)
@@ -84,13 +92,11 @@ internal sealed class SkillCatalog
                 string nameKey = metadata.LevelNames[level];
                 string name = string.IsNullOrEmpty(nameKey) ? metadata.Name : nameKey;
                 name = it.iap(name);
-                preview.Offers.Add(new SkillPreview.Offer { Name = name, Icon = sprite });
+                preview.Offers.Add(new RewardPreview.Offer { Name = name, Icon = sprite });
             }
         }
-        preview.Note = preview.Offers.Count > 0 ? "Предложения здания · условия покупки — при посещении"
-            : sid == "circus" ? "Улучшение навыка определяется при посещении"
-            : "Конкретные навыки пока не определены игрой";
-        if (unresolved > 0 && preview.Offers.Count > 0) preview.Note = "Часть предложений пока не определена игрой";
+        if (preview.Offers.Count == 0) return null;
+        if (unresolved > 0) preview.Note = "Часть предложений пока не определена игрой";
         return preview;
     }
 }

@@ -67,12 +67,23 @@ Check(cover(true, false), "Closing only the top window must not restore markers"
 Check(!cover(false, false), "Closing the last window restores map rendering");
 Check(ResourceIconRules.Resolve(new[] { "wood", "ore" }, "village").SequenceEqual(new[] { "wood", "ore" }), "Village keeps both offered resource types");
 Check(ResourceIconRules.Resolve(new[] { "gemstones", "mercury", "crystals" }, "gingerbread_house").Length == 3, "Choice of three rare resources does not collapse to one coin");
-Check(ResourceIconRules.Resolve(new[] { "wood" }, "windmill").Single() == "wood"
-    && ResourceIconRules.Resolve(new[] { "crystals" }, "windmill").Single() == "crystals", "Same weekly building follows its current reward after reroll");
-Check(ResourceIconRules.Resolve(new[] { "gold", "gold", "hero_exp" }, "gardener").SequenceEqual(new[] { "gold" }), "Repeated resource entries do not add duplicate icons; non-resources are excluded");
+foreach (string id in new[] { "windmill", "gardener" })
+    foreach (string rolledResource in new[] { "gold", "wood", "ore", "gemstones", "crystals", "mercury" })
+        Check(ResourceIconRules.Resolve(new[] { rolledResource }, id).Length == 0,
+            $"{id} never exposes {rolledResource}, including after a weekly reroll");
+Check(ResourceIconRules.Resolve(new[] { "gold", "gold", "hero_exp" }, "storage_gold").SequenceEqual(new[] { "gold" }), "Repeated fixed resource entries do not add duplicate icons; non-resources are excluded");
 Check(ResourceIconRules.Resolve(null, "storage_ore").Single() == "ore", "Consumed ore storage retains its correct identity");
 Check(ResourceIconRules.Resolve(null, "windmill").Length == 0, "Missing random reward never guesses gold or another resource");
 Check(ResourceIconRules.Resolve(new[] { "unrecognized" }, "storage_unrecognized").Length == 0, "Unsupported resource falls back without a false resource icon");
+Check(RewardKnowledgeRules.KnowsSkills(new[] { 1 }, 1), "One player's acquaintance is shared by all of their heroes");
+Check(!RewardKnowledgeRules.KnowsSkills(new[] { 1 }, 2), "Another player's visit does not reveal skills");
+Check(!RewardKnowledgeRules.KnowsSkills(Array.Empty<int>(), 1), "Visible but unvisited building keeps skills hidden");
+Check(!RewardKnowledgeRules.KnowsSkills(null, 1), "Missing acquaintance data fails closed");
+Check(!RewardKnowledgeRules.KnowsSkills(new[] { -1 }, -1), "Missing player identity fails closed");
+int[] savedAcquaintance = System.Text.Json.JsonSerializer.Deserialize<int[]>("[1,3]")!;
+Check(RewardKnowledgeRules.KnowsSkills(savedAcquaintance, 1) && RewardKnowledgeRules.KnowsSkills(savedAcquaintance, 3), "Loaded native knowledge restores each acquainted player's offers");
+Check(!RewardKnowledgeRules.KnowsSkills(new int[0], 1), "Loading an earlier save or new match cannot inherit prior knowledge");
+Check(!RewardKnowledgeRules.IsRandomResource("village") && !RewardKnowledgeRules.IsRandomResource("gingerbread_house"), "Player choices remain distinct from random outcomes");
 // Approximate bounds from the two user screenshots: text panels cover multiple
 // objects while nearby map markers must stay visible. Raycastability is irrelevant.
 var goldDescription = new ScreenBounds(58, 42, 540, 344);
@@ -148,4 +159,4 @@ Check(InterfaceVisibilityRules.IsNotificationLayer("BhNotification"), "Day and m
 Check(!InterfaceVisibilityRules.IsNotificationLayer("BhHUDSession"), "Notification occlusion does not mask the entire map HUD");
 Check(!InterfaceVisibilityRules.BlocksMap("ScSaveNotification", true, true, true, 1, false), "Saving toast does not hide all map hints");
 Check(!TooltipOcclusionRules.IsVisible(true, true, 0), "A transparent notification cannot leave a persistent hole in the overlay");
-Console.WriteLine($"PASS: {checks} checks covering visits, active buffs, windows, resource and stat identity, passive UI occlusion and size migration.");
+Console.WriteLine($"PASS: {checks} checks covering visits, reward knowledge, hidden random rewards, active buffs, windows, resource and stat identity, passive UI occlusion and size migration.");

@@ -1,6 +1,8 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)][string]$GameRoot,
+    [string]$LoaderArchive,
+    [string]$UnityLibrariesArchive,
     [string]$Revision = 'HEAD',
     [string]$OutputDirectory = (Join-Path $PSScriptRoot 'releases')
 )
@@ -55,6 +57,7 @@ foreach ($path in @($archive, $checksum, $record)) {
 }
 Write-Host ('Building committed snapshot: ' + $commit)
 Write-Host 'Uncommitted files are not included.'
+Run-Native 'powershell.exe' @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $snapshot 'tests/Installer.Tests.ps1'))
 Run-Native 'dotnet' @('run', '--project', (Join-Path $snapshot $settings.tests), '-c', 'Release', '--', $core)
 Run-Native 'dotnet' @('build', $project, '-c', 'Release', ('-p:GameRoot=' + $game), '--nologo')
 $dll = Join-Path (Split-Path -Parent $project) ('bin\Release\' + $framework + '\' + $assembly + '.dll')
@@ -62,11 +65,65 @@ if (!(Test-Path -LiteralPath $dll)) { throw 'The mod DLL was not produced.' }
 $dllVersion = [Diagnostics.FileVersionInfo]::GetVersionInfo($dll).ProductVersion.Split('+')[0]
 if ($dllVersion -ne $version) { throw 'DLL version does not match the project.' }
 $package = Join-Path $work 'package'
-$pluginFolder = Join-Path $package ('BepInEx\plugins\' + $settings.mod)
+$payload = Join-Path $package '_files\payload'
+$pluginFolder = Join-Path $payload ('BepInEx\plugins\' + $settings.mod)
 [IO.Directory]::CreateDirectory($pluginFolder) | Out-Null
 Copy-Item -LiteralPath $dll -Destination $pluginFolder
 Copy-Item -LiteralPath (Join-Path $snapshot 'README.md') -Destination $package
 Copy-Item -LiteralPath (Join-Path $snapshot 'Docs') -Destination $package -Recurse
+Copy-Item -LiteralPath (Join-Path $snapshot 'ПРОЧИТАЙ.md') -Destination $package
+foreach ($file in @('Install.bat','Uninstall.bat')) {
+    $text = [IO.File]::ReadAllText((Join-Path $snapshot ('installer/' + $file))) -replace '\r?\n', "`r`n"
+    [IO.File]::WriteAllText((Join-Path $package $file), $text, [Text.Encoding]::ASCII)
+}
+foreach ($file in @('Install.ps1','Installer.Core.ps1','Dependencies.ps1')) {
+    [IO.File]::WriteAllText((Join-Path $package ('_files/' + $file)),
+        [IO.File]::ReadAllText((Join-Path $snapshot ('installer/' + $file))), [Text.UTF8Encoding]::new($true))
+}
+[IO.Directory]::CreateDirectory((Join-Path $payload 'BepInEx/config')) | Out-Null
+Copy-Item -LiteralPath (Join-Path $snapshot 'installer/BepInEx.cfg') -Destination (Join-Path $payload 'BepInEx/config/BepInEx.cfg')
+Copy-Item -LiteralPath (Join-Path $snapshot 'installer/doorstop_config.ini') -Destination $payload
+# Dependency bytes are used to derive checksums, but are not redistributed in the ZIP.
+. (Join-Path $snapshot 'installer/Installer.Core.ps1')
+. (Join-Path $snapshot 'installer/Dependencies.ps1')
+$dependencyRoot = Join-Path $work 'dependencies'
+[IO.Directory]::CreateDirectory($dependencyRoot) | Out-Null
+$dependencyFiles = [Collections.Generic.List[object]]::new()
+foreach ($dependency in $settings.downloads) {
+    $local = $UnityLibrariesArchive
+    if ($dependency.kind -eq 'Archive') { $local = $LoaderArchive }
+    if (!$local) {
+        $local = Join-Path $dependencyRoot ($dependency.id + '.zip')
+        Save-VerifiedDownload $dependency $local
+    }
+    if ((Get-FileHash -LiteralPath $local -Algorithm SHA256).Hash -ne $dependency.sha256) { throw 'Dependency archive hash mismatch.' }
+    if ($dependency.kind -eq 'File') {
+        $dependencyFiles.Add([ordered]@{path=$dependency.path;kind='Loader';sha256=$dependency.sha256})
+        continue
+    }
+    $zip = [IO.Compression.ZipFile]::OpenRead([IO.Path]::GetFullPath($local))
+    try {
+        foreach ($entry in $zip.Entries) {
+            if (!$entry.Name -or $entry.FullName -in @('changelog.txt','doorstop_config.ini')) { continue }
+            if ($entry.FullName -notmatch '^(BepInEx/core/|dotnet/|winhttp\.dll$|\.doorstop_version$)') { throw 'Unexpected loader entry.' }
+            $target = Join-PackPath $dependencyRoot ('extracted/' + $entry.FullName)
+            [IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($target)) | Out-Null
+            [IO.Compression.ZipFileExtensions]::ExtractToFile($entry, $target, $false)
+            $dependencyFiles.Add([ordered]@{path=$entry.FullName;kind='Loader';sha256=(Get-FileHash -LiteralPath $target -Algorithm SHA256).Hash})
+        }
+    } finally { $zip.Dispose() }
+}
+$payloadFiles = @(Get-ChildItem -LiteralPath $payload -File -Recurse | ForEach-Object {
+    $path = $_.FullName.Substring($payload.Length + 1).Replace('\','/')
+    $kind = 'Config'
+    if ($path.StartsWith('BepInEx/plugins/')) { $kind = 'Mod' }
+    [ordered]@{path=$path;kind=$kind;sha256=(Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash}
+})
+$installerManifest = [ordered]@{
+    name=$settings.name;version=$version;commit=$commit;steamBuild=$settings.steamBuild
+    gameFiles=$settings.gameFiles;downloads=$settings.downloads;files=@($payloadFiles) + @($dependencyFiles.ToArray())
+}
+[IO.File]::WriteAllText((Join-Path $package '_files/manifest.json'), ($installerManifest | ConvertTo-Json -Depth 8), [Text.UTF8Encoding]::new($false))
 foreach ($legal in @('LICENSE', 'LICENSE.md', 'LICENSE.txt', 'NOTICE', 'NOTICE.md', 'THIRD-PARTY-NOTICES.md')) {
     $legalPath = Join-Path $snapshot $legal
     if (Test-Path -LiteralPath $legalPath) { Copy-Item -LiteralPath $legalPath -Destination $package }

@@ -6,6 +6,7 @@ namespace OldenEra.MapHints;
 public sealed partial class HintOverlay
 {
     private Texture2D _drop;
+    private Texture2D _randomCube;
 
     private static IntPtr ReadHover(fbu world)
     {
@@ -23,7 +24,7 @@ public sealed partial class HintOverlay
     private void LogPreviewError(Exception error)
     {
         if (Time.unscaledTime < _nextErrorLog) return;
-        Plugin.Instance.Log.LogWarning($"Skill hover preview unavailable: {error.GetType().Name}: {error.Message}");
+        Plugin.Instance.Log.LogWarning($"Reward hover preview unavailable: {error.GetType().Name}: {error.Message}");
         _nextErrorLog = Time.unscaledTime + 15f;
     }
 
@@ -62,11 +63,17 @@ public sealed partial class HintOverlay
         GUI.Label(label, "МАНА", _iconStyle);
     }
 
-    private void DrawSkillPreview(SkillPreview preview, Vector2 mouse, float scale)
+    private void DrawRewardPreview(RewardPreview preview, Vector2 mouse, float scale)
     {
+        if (preview == null || preview.Offers.Count == 0) return;
         int count = Math.Min(8, preview.Offers.Count);
         float width = Math.Min(365 * scale, Screen.width - 16 * scale);
-        float height = (76 + count * 48) * scale;
+        _tooltipStyle.fontSize = Mathf.RoundToInt(11 * scale);
+        bool hasNote = !string.IsNullOrEmpty(preview.Note);
+        float noteHeight = hasNote
+            ? Math.Max(34 * scale, _tooltipStyle.CalcHeight(new GUIContent(preview.Note), width - 24 * scale))
+            : 0;
+        float height = (40 + count * 48 + (hasNote ? 8 : 0)) * scale + noteHeight;
         float x = mouse.x - width - 20 * scale;
         if (x < 8 * scale) x = mouse.x + 22 * scale;
         x = Math.Clamp(x, 8 * scale, Math.Max(8 * scale, Screen.width - width - 8 * scale));
@@ -94,9 +101,36 @@ public sealed partial class HintOverlay
             _tooltipStyle.fontSize = Mathf.RoundToInt(13 * scale);
             GUI.Label(new Rect(x + 63 * scale, rowY + 2 * scale, width - 76 * scale, 42 * scale), offer.Name, _tooltipStyle);
         }
-        _tooltipStyle.fontSize = Mathf.RoundToInt(11 * scale);
-        GUI.color = new Color(0.74f, 0.77f, 0.84f);
-        GUI.Label(new Rect(x + 12 * scale, y + (38 + count * 48) * scale, width - 24 * scale, 34 * scale), preview.Note, _tooltipStyle);
+        if (hasNote)
+        {
+            _tooltipStyle.fontSize = Mathf.RoundToInt(11 * scale);
+            GUI.color = new Color(0.74f, 0.77f, 0.84f);
+            GUI.Label(new Rect(x + 12 * scale, y + (38 + count * 48) * scale, width - 24 * scale, noteHeight), preview.Note, _tooltipStyle);
+        }
+        GUI.color = Color.white;
+    }
+
+    private void DrawRandomCube(Rect rect, Color tint)
+    {
+        if (!_randomCube)
+        {
+            _randomCube = new Texture2D(64, 64, TextureFormat.RGBA32, false) { filterMode = FilterMode.Bilinear };
+            // A three-faced cube also works when menu-only native sprites are unloaded.
+            for (int y = 0; y < 64; y++) for (int x = 0; x < 64; x++)
+            {
+                float nx = (x + 0.5f) / 64f, ny = (y + 0.5f) / 64f;
+                float dx = Math.Abs(nx - 0.5f);
+                bool top = ny > 0.53f + dx * 0.55f && ny < 0.99f - dx * 0.55f;
+                bool side = ny > 0.01f + dx * 0.55f && ny < 0.49f + dx * 0.55f;
+                Color color = top ? new Color(0.83f, 0.71f, 0.43f)
+                    : side && nx < 0.48f ? new Color(0.70f, 0.57f, 0.30f)
+                    : side && nx > 0.52f ? new Color(0.59f, 0.47f, 0.23f) : Color.clear;
+                _randomCube.SetPixel(x, y, color);
+            }
+            _randomCube.Apply();
+        }
+        GUI.color = tint;
+        GUI.DrawTexture(rect, _randomCube);
         GUI.color = Color.white;
     }
 

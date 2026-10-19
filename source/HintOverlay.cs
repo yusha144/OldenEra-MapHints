@@ -41,7 +41,7 @@ public sealed partial class HintOverlay : MonoBehaviour
     private readonly ResourceIcons _resourceIcons = new();
     private readonly BuffIcons _buffIcons = new();
     private readonly StatIcons _statIcons = new();
-    private SkillPreview _skillPreview;
+    private RewardPreview _rewardPreview;
     private IntPtr _hoverPointer;
     private float _hoverSince;
 
@@ -77,7 +77,7 @@ public sealed partial class HintOverlay : MonoBehaviour
             {
                 _hoverPointer = hoverPointer;
                 _hoverSince = Time.unscaledTime;
-                _skillPreview = null;
+                _rewardPreview = null;
                 _nextRefresh = 0;
             }
             if (Time.unscaledTime < _nextRefresh) return;
@@ -101,7 +101,7 @@ public sealed partial class HintOverlay : MonoBehaviour
         _camera = null;
         _mapActive = false;
         _lastHero = -1;
-        _skillPreview = null;
+        _rewardPreview = null;
         _hoverPointer = IntPtr.Zero;
     }
 
@@ -109,7 +109,7 @@ public sealed partial class HintOverlay : MonoBehaviour
     {
         _markers.Clear();
         _mapActive = false;
-        _skillPreview = null;
+        _rewardPreview = null;
         var worldCamera = BhWorldCamera.btbj;
         var hud = BhHeroHUDPanel.me;
         if (!worldCamera || !hud || !hud.gameObject.activeInHierarchy) return;
@@ -155,7 +155,7 @@ public sealed partial class HintOverlay : MonoBehaviour
             {
                 if (Plugin.Instance.SkillHover.Value && _hoverPointer != IntPtr.Zero && bank.cozc?.Pointer == _hoverPointer)
                 {
-                    try { _skillPreview = _skills.Read(bank); }
+                    try { _rewardPreview = _skills.Read(bank, side.index); }
                     catch (Exception error) { LogPreviewError(error); }
                 }
                 continue; // No permanent icons for skill buildings, in any display mode.
@@ -243,9 +243,9 @@ public sealed partial class HintOverlay : MonoBehaviour
                     }
                 }
             }
-            if (_skillPreview != null && Plugin.Instance.Mode.Value != DisplayMode.Off
-                && Time.unscaledTime - _hoverSince >= 0.18f && ReadHover(fbu.me) == _skillPreview.HoverPointer)
-                DrawSkillPreview(_skillPreview, mouse, scale);
+            if (_rewardPreview != null && Plugin.Instance.Mode.Value != DisplayMode.Off
+                && Time.unscaledTime - _hoverSince >= 0.18f && ReadHover(fbu.me) == _rewardPreview.HoverPointer)
+                DrawRewardPreview(_rewardPreview, mouse, scale);
             GUI.color = Color.white;
         }
         catch (Exception error)
@@ -318,7 +318,11 @@ public sealed partial class HintOverlay : MonoBehaviour
         float inset = 3 * scale;
         var iconArea = new Rect(rect.x + inset, rect.y + inset, rect.width - 2 * inset, rect.height - 2 * inset);
         Color tint = marker.State == HintState.Used ? new Color(0.65f, 0.65f, 0.65f, 0.58f) : Color.white;
-        if (glyph == null || !DrawSpriteIcon(iconArea, glyph.Icon, tint))
+        if (glyph?.RandomResource == true)
+        {
+            if (!DrawSpriteIcon(iconArea, glyph.Icon, tint)) DrawRandomCube(iconArea, tint);
+        }
+        else if (glyph == null || !DrawSpriteIcon(iconArea, glyph.Icon, tint))
         {
             string symbol = glyph?.Fallback ?? (marker.Category switch { "Experience" => "XP", "Stats" => "↑", "Magic" => "S", "Buff" => "+", "Resources" => "?", _ => "!" });
             _iconStyle!.fontSize = Mathf.RoundToInt(rect.height * 0.41f);
@@ -347,5 +351,5 @@ public sealed partial class HintOverlay : MonoBehaviour
         }
     }
 
-    public void OnDestroy() { if (_disc) UnityEngine.Object.Destroy(_disc); if (_drop) UnityEngine.Object.Destroy(_drop); }
+    public void OnDestroy() { if (_disc) UnityEngine.Object.Destroy(_disc); if (_drop) UnityEngine.Object.Destroy(_drop); if (_randomCube) UnityEngine.Object.Destroy(_randomCube); }
 }

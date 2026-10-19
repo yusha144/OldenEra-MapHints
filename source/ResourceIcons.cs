@@ -9,21 +9,29 @@ internal sealed class MarkerGlyph
     internal string Fallback;
     internal string Badge;
     internal int AlternativeGroup = -1;
+    internal bool RandomResource;
 }
 
 internal sealed class ResourceIcons
 {
     private readonly Dictionary<string, Sprite> _sprites = new();
     private readonly HashSet<string> _warned = new();
+    private Sprite _randomIcon;
+    private bool _searchedRandomIcon;
 
-    internal void Clear() { _sprites.Clear(); _warned.Clear(); }
+    internal void Clear() { _sprites.Clear(); _warned.Clear(); _randomIcon = null; _searchedRandomIcon = false; }
 
     internal MarkerGlyph[] Read(DataObject data)
     {
         try
         {
+            // Show only the type of interaction, without even reading the rolled reward.
+            if (RewardKnowledgeRules.IsRandomResource(data.sidConfig))
+                return new[] { new MarkerGlyph { Icon = GetRandomIcon(), RandomResource = true } };
             // Read the instantiated reward only. Never roll a variant or generate a reward.
-            var rewards = data.rewardSet?.rewards;
+            var set = data.rewardSet;
+            var rewards = set?.rewards;
+            bool choice = set != null && set.applyType == ERewardSetApplyType.OnlySelected && rewards != null && rewards.Count > 1;
             var ids = new List<string>();
             if (rewards != null)
                 foreach (var reward in rewards)
@@ -36,13 +44,36 @@ internal sealed class ResourceIcons
                 }
             var resolved = ResourceIconRules.Resolve(ids, data.sidConfig);
             if (resolved.Length == 0) return null;
-            return resolved.Select(id => new MarkerGlyph { Icon = GetSprite(id), Fallback = ResourceIconRules.Fallback(id) }).ToArray();
+            return resolved.Select((id, index) => new MarkerGlyph {
+                Icon = GetSprite(id), Fallback = ResourceIconRules.Fallback(id),
+                AlternativeGroup = choice ? index : -1
+            }).ToArray();
         }
         catch (Exception error)
         {
             if (_warned.Add("read")) Plugin.Instance.Log.LogWarning($"Resource icons unavailable: {error.Message}");
             return null;
         }
+    }
+
+    private Sprite GetRandomIcon()
+    {
+        if (_randomIcon) return _randomIcon;
+        if (_searchedRandomIcon) return null;
+        _searchedRandomIcon = true;
+        // These native dice are used by the game's random hero/faction selection.
+        // Some scenes unload them; DrawRandomCube supplies a vector fallback then.
+        try
+        {
+            foreach (var sprite in Resources.FindObjectsOfTypeAll<Sprite>())
+                if (sprite && sprite.name is "random_icon_medium" or "random_icon_large" or "random_Icon")
+                { _randomIcon = sprite; break; }
+        }
+        catch (Exception error)
+        {
+            if (_warned.Add("random-icon")) Plugin.Instance.Log.LogWarning($"Using the fallback random reward cube: {error.Message}");
+        }
+        return _randomIcon;
     }
 
     private Sprite GetSprite(string id)

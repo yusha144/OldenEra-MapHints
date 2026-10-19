@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 
 namespace OldenEra.MapHints;
 
-[BepInPlugin("local.oldenera.maphints", "Olden Era Map Hints", "0.3.7")]
+[BepInPlugin("local.oldenera.maphints", "Olden Era Map Hints", "0.3.12")]
 public sealed class Plugin : BasePlugin
 {
     internal static Plugin Instance = null!;
@@ -25,7 +25,7 @@ public sealed class Plugin : BasePlugin
     {
         Instance = this;
         Enabled = Config.Bind("Display", "Enabled", true, "Enable the local map overlay.");
-        Mode = Config.Bind("Display", "Mode", DisplayMode.All, "All: show used objects dimmed; Available: ready rewards only; Off: hide. Hotkey: yusha144.hotkeys.cfg.");
+        Mode = Config.Bind("Display", "Mode", DisplayMode.All, "All: show used objects dimmed; Available: ready rewards only; Off: hide. Hotkey: OldenEra.hotkeys.cfg.");
         Size = Config.Bind("Display", "IconSize", 32, new ConfigDescription("Icon diameter in pixels at 1080p.", new AcceptableValueRange<int>(20, 64)));
         MarkerScale = Config.Bind("Display", "MarkerScale", MarkerSizing.DefaultScale, new ConfigDescription("Scale map markers, their rings, glow and badges together. 0.84 is 20 percent larger than the previous 0.7 scale.", new AcceptableValueRange<float>(0.35f, 1.5f)));
         var visualRevision = Config.Bind("Internal", "VisualRevision", 0, "Tracks one-time migration of the old marker size.");
@@ -36,7 +36,7 @@ public sealed class Plugin : BasePlugin
         }
         CycleKey = HotkeySettings.Load("MapHints");
         Diagnostics = Config.Bind("Diagnostics", "LogStateChanges", false, "Log local hero and visible marker counts, without player names or save contents.");
-        SkillHover = Config.Bind("Display", "SkillHoverPreview", true, "Show offered skills only while hovering over a skill building.");
+        SkillHover = Config.Bind("Display", "SkillHoverPreview", true, "Show concrete skill offers on hover only after this player's acquaintance with the building; hide empty previews and circus hints.");
         WellPulse = Config.Bind("Display", "PulseManaWells", true, "Gently pulse mana wells when the selected hero is missing mana.");
         string root = Paths.GameRootPath;
         if (!Matches(Path.Combine(root, "HeroesOldenEra_Data", "il2cpp_data", "Metadata", "global-metadata.dat"), MetadataSha)
@@ -46,7 +46,7 @@ public sealed class Plugin : BasePlugin
             return;
         }
         AddComponent<HintOverlay>();
-        Log.LogInfo($"Map Hints 0.3.7 by yusha144 loaded. Marker scale={MarkerScale.Value}; map legend removed. {CycleKey.Value} cycles All / Available / Off; configure yusha144.hotkeys.cfg.");
+        Log.LogInfo($"Map Hints 0.3.12 loaded. Marker scale={MarkerScale.Value}. {CycleKey.Value} cycles All / Available / Off; configure OldenEra.hotkeys.cfg.");
     }
 
     private static bool Matches(string path, string expected)
