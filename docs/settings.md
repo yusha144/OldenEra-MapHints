@@ -43,7 +43,7 @@ MapHints = F8 + LeftControl
 
 ## 4. Журнал
 
-Сообщения мода находятся в `BepInEx/LogOutput.log`. Для проверки загрузки найдите `Map Hints 0.3.12 loaded`. При несовпадении игровых файлов мод отключает подсказки и пишет `supports Steam build 25672315 only`.
+Сообщения мода находятся в `BepInEx/LogOutput.log`. Для проверки загрузки найдите `Map Hints 0.3.13 loaded`. При несовпадении игровых файлов мод отключает подсказки и пишет `supports Steam build 26321935 only`.
 
 Для подробной записи смены героя и отметок включите `Diagnostics.LogStateChanges`. После проверки верните значение false.
 

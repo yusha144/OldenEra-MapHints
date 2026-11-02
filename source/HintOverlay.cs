@@ -68,7 +68,7 @@ public sealed partial class HintOverlay : MonoBehaviour
                 _nextRefresh = 0;
             }
             if (!Plugin.Instance.Enabled.Value) { Clear(); return; }
-            var current = fbu.me;
+            var current = feg.me;
             if (!current || !current.gameObject.activeInHierarchy) { Clear(); return; }
             if (current.Pointer != _world) { Clear(); _screenTypes.Clear(); _resourceIcons.Clear(); _buffIcons.Clear(); _statIcons.Clear(); _world = current.Pointer; _nextRefresh = 0; }
             if (IsMapCovered()) { Clear(); _nextRefresh = 0; return; }
@@ -105,23 +105,23 @@ public sealed partial class HintOverlay : MonoBehaviour
         _hoverPointer = IntPtr.Zero;
     }
 
-    private void Refresh(fbu world)
+    private void Refresh(feg world)
     {
         _markers.Clear();
         _mapActive = false;
         _rewardPreview = null;
-        var worldCamera = BhWorldCamera.btbj;
+        var worldCamera = BhWorldCamera.butc;
         var hud = BhHeroHUDPanel.me;
         if (!worldCamera || !hud || !hud.gameObject.activeInHierarchy) return;
         if (hud.cg && hud.cg.alpha < 0.05f) return;
-        var hudHero = hud.cghv;
-        if (hudHero == null || hudHero.cnsk == null) return;
-        // cpak is the hero used by the game's own per-hero tooltip query.
-        var hero = hudHero.cnsk.cpak;
+        var hudHero = hud.cikh;
+        if (hudHero == null || hudHero.cqdw == null) return;
+        // crlo is the hero used by the game's own per-hero tooltip query.
+        var hero = hudHero.cqdw.crlo;
         if (hero == null || hero.Pointer != hudHero.Pointer) return;
-        var dataHero = hero.cuaa;
+        var dataHero = hero.cwsy;
         if (dataHero == null || dataHero.inBattle_) return;
-        var side = hero.cnsk.cudy;
+        var side = hero.cqdw.cwwy;
         if (side == null || side.index != dataHero.sideId) return;
         var visibility = side.fogData?.visibilityMap;
         if (visibility == null) return;
@@ -130,22 +130,22 @@ public sealed partial class HintOverlay : MonoBehaviour
         _mapActive = true;
         _lastHero = dataHero.id;
         if (Plugin.Instance.Mode.Value == DisplayMode.Off) return;
-        var registry = world.cnmf?.cozn;
+        var registry = world.cpxq?.crks;
         if (registry == null) return;
         int available = 0, used = 0, requirements = 0;
         foreach (var pair in registry)
         {
-            var bank = pair.Value?.TryCast<fmt>();
+            var bank = pair.Value?.TryCast<fpj>();
             if (bank == null) continue;
-            var data = bank.cowc;
+            var data = bank.crhg;
             if (data == null || data.released || data.inBattle) continue;
             bool skillBuilding = VisitRules.IsSkillBuilding(data.sidConfig);
             if (!_catalog.TryGetValue(data.sidConfig, out var definition) && !skillBuilding) continue;
-            var mapObject = bank.coyw;
+            var mapObject = bank.crkb;
             if (mapObject == null) continue;
-            var node = mapObject.bzrc;
+            var node = mapObject.cbnv;
             if (node < 0 || node >= visibility.Length || !visibility[node]) continue;
-            var behaviour = mapObject.bzro;
+            var behaviour = mapObject.cboh;
             if (!behaviour || !behaviour.gameObject.activeInHierarchy) continue;
             var anchor = behaviour.lookPoint ? behaviour.lookPoint : behaviour.transform;
             Vector3 position = anchor.position;
@@ -153,7 +153,7 @@ public sealed partial class HintOverlay : MonoBehaviour
             if (viewport.z <= 0 || viewport.x < -0.05f || viewport.x > 1.05f || viewport.y < -0.05f || viewport.y > 1.05f) continue;
             if (skillBuilding)
             {
-                if (Plugin.Instance.SkillHover.Value && _hoverPointer != IntPtr.Zero && bank.cozc?.Pointer == _hoverPointer)
+                if (Plugin.Instance.SkillHover.Value && _hoverPointer != IntPtr.Zero && bank.crkb?.Pointer == _hoverPointer)
                 {
                     try { _rewardPreview = _skills.Read(bank, side.index); }
                     catch (Exception error) { LogPreviewError(error); }
@@ -163,23 +163,23 @@ public sealed partial class HintOverlay : MonoBehaviour
             if (definition.Category == "Mana")
             {
                 int currentMana = dataHero.mana;
-                int maxMana = hero.cuab.bjgh();
+                int maxMana = hero.cwsz.bkqh();
                 bool needsMana = VisitRules.NeedsMana(currentMana, maxMana);
                 if (VisitRules.ShouldDisplayWell(Plugin.Instance.Mode.Value))
                     _markers.Add(new Marker(data.idMapObject, position, "Mana", "None",
                         needsMana ? HintState.Available : HintState.Used));
                 continue;
             }
-            // Both methods are read-only eligibility queries verified in build 25672315.
+            // Both methods are read-only eligibility queries verified in build 26321935.
             // The game owns visitor lists and resets them on day/week change and save load.
             var nativeVisitors = data.visitorsList;
             if (nativeVisitors == null) continue;
             var visitors = new int[nativeVisitors.Count];
             for (int i = 0; i < visitors.Length; i++) visitors[i] = nativeVisitors[i];
-            bool? policyResult = VisitRules.CanVisit((int)bank.cowd.cbvd, visitors, dataHero.id, side.index);
-            if (!policyResult.HasValue || policyResult.Value != bank.bmdw(hero)) continue;
+            bool? policyResult = VisitRules.CanVisit((int)bank.crhh.cduq, visitors, dataHero.id, side.index);
+            if (!policyResult.HasValue || policyResult.Value != bank.bnov(hero)) continue;
             bool visitAvailable = policyResult.Value;
-            bool rewardAvailable = visitAvailable && bank.bmbk(hero);
+            bool rewardAvailable = visitAvailable && bank.bnmj(hero);
             bool rewardAlreadyActive = visitAvailable && definition.Category == "Buff"
                 && BuffAvailability.AllRewardsAlreadyActive(bank, dataHero);
             var state = VisitRules.Classify(visitAvailable, rewardAvailable, rewardAlreadyActive);
@@ -244,7 +244,7 @@ public sealed partial class HintOverlay : MonoBehaviour
                 }
             }
             if (_rewardPreview != null && Plugin.Instance.Mode.Value != DisplayMode.Off
-                && Time.unscaledTime - _hoverSince >= 0.18f && ReadHover(fbu.me) == _rewardPreview.HoverPointer)
+                && Time.unscaledTime - _hoverSince >= 0.18f && ReadHover(feg.me) == _rewardPreview.HoverPointer)
                 DrawRewardPreview(_rewardPreview, mouse, scale);
             GUI.color = Color.white;
         }

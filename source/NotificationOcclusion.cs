@@ -19,12 +19,12 @@ internal sealed class NotificationOcclusion
         _seen.Clear();
         try
         {
-            var screens = cpo.ccog;
+            var screens = cqo.cvrr;
             if (screens == null) return;
-            if (screens.ccoh != null)
-                foreach (var entry in screens.ccoh) ReadScreen(entry.Value, scale);
-            if (screens.ccoi != null)
-                foreach (var screen in screens.ccoi) ReadScreen(screen, scale);
+            if (screens.ceom != null)
+                foreach (var entry in screens.ceom) ReadScreen(entry.Value, scale);
+            if (screens.ceon != null)
+                foreach (var screen in screens.ceon) ReadScreen(screen, scale);
         }
         catch (Exception error)
         {

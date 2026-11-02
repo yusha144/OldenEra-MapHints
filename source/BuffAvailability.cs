@@ -8,22 +8,22 @@ internal static class BuffAvailability
 {
     private static float _nextErrorLog;
 
-    internal static bool AllRewardsAlreadyActive(fmt bank, Hero hero)
+    internal static bool AllRewardsAlreadyActive(fpj bank, Hero hero)
     {
         try
         {
-            var rewards = bank.cowe?.cojj;
+            var rewards = bank.crhi?.cqur;
             var active = hero.buffs?.list;
             if (rewards == null || rewards.Length == 0 || active == null || active.Count == 0) return false;
             var offers = new List<BuffOffer>();
             bool hasOtherRewards = false;
             foreach (var reward in rewards)
             {
-                var buffReward = reward?.TryCast<fis>();
+                var buffReward = reward?.TryCast<flf>();
                 if (buffReward == null) { hasOtherRewards = true; continue; }
-                var config = buffReward.cojr;
+                var config = buffReward.cquz;
                 if (config == null) return false;
-                offers.Add(new BuffOffer(buffReward.cojp, (int)config.cbuk, ReadDurations(buffReward.cojq)));
+                offers.Add(new BuffOffer(buffReward.cqux, (int)config.cdtx, ReadDurations(buffReward.cquy)));
             }
             if (hasOtherRewards || offers.Count == 0) return false;
             var buffs = new List<ActiveHeroBuff>();
@@ -50,7 +50,7 @@ internal static class BuffAvailability
         if (durations == null) return Array.Empty<int>();
         var types = new int[durations.Length];
         for (int index = 0; index < types.Length; index++)
-            types[index] = durations[index] == null ? -1 : (int)durations[index].ctyu;
+            types[index] = durations[index] == null ? -1 : (int)durations[index].cwrs;
         return types;
     }
 }

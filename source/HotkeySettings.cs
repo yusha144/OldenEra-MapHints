@@ -11,7 +11,7 @@ internal static class HotkeySettings
     {
         string directory = configDirectory ?? Paths.ConfigPath;
         string path = Path.Combine(directory, "OldenEra.hotkeys.cfg");
-        // Standalone upgrades can still read the previous config until the installer migrates it.
+        // Standalone upgrades can still read the previous config until the installer migrates iv.
         string legacy = Path.Combine(directory, "yusha144.hotkeys.cfg");
         if (!File.Exists(path) && File.Exists(legacy)) path = legacy;
         bool exists = File.Exists(path);

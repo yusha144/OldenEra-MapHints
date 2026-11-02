@@ -8,15 +8,15 @@ public sealed partial class HintOverlay
     private Texture2D _drop;
     private Texture2D _randomCube;
 
-    private static IntPtr ReadHover(fbu world)
+    private static IntPtr ReadHover(feg world)
     {
         if (!world || !Plugin.Instance.SkillHover.Value || Plugin.Instance.Mode.Value == DisplayMode.Off) return IntPtr.Zero;
         try
         {
             var events = EventSystem.current;
             if (events && events.IsPointerOverGameObject()) return IntPtr.Zero;
-            // fln.corz is the game's current raycast target; reading it does not rerun picking.
-            return world.cnlr?.couf?.corz?.Pointer ?? IntPtr.Zero;
+            // fln.crde is the game's current raycast target; reading it does not rerun picking.
+            return world.cpxb?.crfj?.crde?.Pointer ?? IntPtr.Zero;
         }
         catch { return IntPtr.Zero; } // Optional preview must not disable ordinary markers.
     }

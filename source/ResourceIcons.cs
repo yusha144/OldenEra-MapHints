@@ -80,8 +80,8 @@ internal sealed class ResourceIcons
     {
         if (_sprites.TryGetValue(id, out var sprite) && sprite) return sprite;
         // resources_info.json maps these seven resource IDs directly to sprite IDs.
-        // cbws is the lookup used by cnh.tak; direct access avoids its generic missing-icon fallback.
-        var sprites = cnh.cbwr?.cbws;
+        // cdwe is the lookup used by coh.tak; direct access avoids its generic missing-icon fallback.
+        var sprites = coh.cdwd?.cdwe;
         if (sprites != null && sprites.TryGetValue(id, out sprite) && sprite)
         {
             _sprites[id] = sprite;

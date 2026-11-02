@@ -21,14 +21,14 @@ public sealed partial class HintOverlay
     {
         try
         {
-            var screens = cpo.ccog;
+            var screens = cqo.cvrr;
             if (screens == null) return true;
-            if (screens.ccoh != null)
-                foreach (var entry in screens.ccoh)
+            if (screens.ceom != null)
+                foreach (var entry in screens.ceom)
                     if (IsBlockingScreen(entry.Value)) return true;
             // Includes temporary/duplicate screens that need not be dictionary entries.
-            if (screens.ccoi != null)
-                foreach (var screen in screens.ccoi)
+            if (screens.ceon != null)
+                foreach (var screen in screens.ceon)
                     if (IsBlockingScreen(screen)) return true;
             if (_lastBlockingScreen.Length != 0)
                 Plugin.Instance.Log.LogInfo("Overlay returned to adventure map.");
@@ -64,7 +64,7 @@ public sealed partial class HintOverlay
             bookView = controller && controller.gameObject.activeInHierarchy
                 && controller.canvasGroup && controller.canvasGroup.alpha > 0.01f;
         }
-        bool covered = InterfaceVisibilityRules.BlocksMap(type, true, screen.cszv,
+        bool covered = InterfaceVisibilityRules.BlocksMap(type, true, screen.cvrc,
             screen.canvas && screen.canvas.isActiveAndEnabled, screen.cg ? screen.cg.alpha : 1f, bookView);
         if (covered && type != _lastBlockingScreen)
         {

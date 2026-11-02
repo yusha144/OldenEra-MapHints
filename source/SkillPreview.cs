@@ -55,43 +55,43 @@ internal sealed class SkillCatalog
         }
     }
 
-    internal RewardPreview Read(fmt bank, int sideId)
+    internal RewardPreview Read(fpj bank, int sideId)
     {
-        var sid = bank.cowc.sidConfig;
+        var sid = bank.crhg.sidConfig;
         if (sid is not ("university" or "infernal_cirque" or "wise_owl")) return null;
-        var scoutings = bank.cowc.sideScoutings;
+        var scoutings = bank.crhg.sideScoutings;
         var acquaintedSides = scoutings == null ? null : new int[scoutings.Count];
         if (scoutings != null)
             for (int index = 0; index < scoutings.Count; index++) acquaintedSides[index] = scoutings[index];
         if (!RewardKnowledgeRules.KnowsSkills(acquaintedSides, sideId)) return null;
         var preview = new RewardPreview {
             Title = sid switch { "university" => "Университет", "infernal_cirque" => "Зловещий театр", _ => "Мудрый сыч" },
-            HoverPointer = bank.cozc?.Pointer ?? IntPtr.Zero
+            HoverPointer = bank.crkb?.Pointer ?? IntPtr.Zero
         };
         // sideScoutings is filled by the native interaction, before the purchase.
         // Never read the resolved offers until this player has acquainted the building.
-        var rewards = bank.cowe?.cojj;
+        var rewards = bank.crhi?.cqur;
         int unresolved = 0;
         if (rewards != null)
         {
             foreach (var reward in rewards)
             {
-                var skill = reward?.TryCast<fja>();
+                var skill = reward?.TryCast<fln>();
                 if (skill == null) { unresolved++; continue; }
-                string id = skill.cokb;
+                string id = skill.cqvk;
                 if (string.IsNullOrEmpty(id) || !_skills.TryGetValue(id, out var metadata) || metadata.Icons.Length == 0)
                 { unresolved++; continue; }
-                // Native fja.blfs uses level 3 for Max, level 1 otherwise.
-                int level = (int)skill.cokc == 2 ? Math.Min(2, metadata.Icons.Length - 1) : 0;
+                // Native fln.blfs uses level 3 for Max, level 1 otherwise.
+                int level = (int)skill.cqvl == 2 ? Math.Min(2, metadata.Icons.Length - 1) : 0;
                 string iconId = metadata.Icons[level];
                 if (!_icons.TryGetValue(iconId, out var sprite))
                 {
-                    sprite = cnh.taf()?.tak(iconId);
+                    sprite = coh.cdwd?.cdwe?[iconId];
                     _icons[iconId] = sprite;
                 }
                 string nameKey = metadata.LevelNames[level];
                 string name = string.IsNullOrEmpty(nameKey) ? metadata.Name : nameKey;
-                name = it.iap(name);
+                name = iv.ihh(name);
                 preview.Offers.Add(new RewardPreview.Offer { Name = name, Icon = sprite });
             }
         }

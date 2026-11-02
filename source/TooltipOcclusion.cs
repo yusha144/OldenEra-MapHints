@@ -19,7 +19,7 @@ internal sealed class TooltipOcclusion
         {
             // Use existing UI objects. The game pools tooltips, including multiple
             // simultaneous descriptions; no show/hide or layout methods are invoked.
-            var manager = BhTooltips.cdsk;
+            var manager = BhTooltips.cvwc;
             if (!manager || !manager.gameObject.activeInHierarchy) return;
             ReadParent(manager.baseParent, scale);
             ReadParent(manager.overlayParent, scale);
