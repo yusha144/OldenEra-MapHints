@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 
 namespace OldenEra.MapHints;
 
-[BepInPlugin("local.oldenera.maphints", "Olden Era Map Hints", "0.3.13")]
+[BepInPlugin("local.oldenera.maphints", "Olden Era Map Hints", "0.3.14")]
 public sealed class Plugin : BasePlugin
 {
     internal static Plugin Instance = null!;
@@ -46,7 +46,7 @@ public sealed class Plugin : BasePlugin
             return;
         }
         AddComponent<HintOverlay>();
-        Log.LogInfo($"Map Hints 0.3.13 loaded. Marker scale={MarkerScale.Value}. {CycleKey.Value} cycles All / Available / Off; configure OldenEra.hotkeys.cfg.");
+        Log.LogInfo($"Map Hints 0.3.14 loaded. Marker scale={MarkerScale.Value}. {CycleKey.Value} cycles All / Available / Off; configure OldenEra.hotkeys.cfg.");
     }
 
     private static bool Matches(string path, string expected)

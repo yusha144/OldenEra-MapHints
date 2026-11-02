@@ -19,9 +19,9 @@
 Команды выполняются из корня репозитория:
 
 ```powershell
-dotnet run --project .\development\tests\Tests.csproj -c Release -- '<папка игры>\HeroesOldenEra_Data\StreamingAssets\Core.zip'
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\development\tests\Installer.Tests.ps1
 dotnet build .\source\MapHints.csproj -c Release '-p:GameRoot=<папка игры>'
+dotnet run --project .\development\tests\Tests.csproj -c Release -- '<папка игры>\HeroesOldenEra_Data\StreamingAssets\Core.zip' '.\source\bin\Release\net6.0\OldenEra.MapHints.dll'
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\development\tests\Installer.Tests.ps1
 ```
 
 Мод рассчитан на net6.0, проверки правил на net8.0. Проверки установщика работают с искусственными папками в `development/artifacts/installer-tests`. Они проверяют установку, обновление, сохранение соседних модов и настроек, обработку ошибок и удаление.

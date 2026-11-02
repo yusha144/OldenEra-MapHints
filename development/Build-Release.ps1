@@ -58,12 +58,12 @@ foreach ($path in @($archive, $checksum, $record)) {
 Write-Host ('Building committed snapshot: ' + $commit)
 Write-Host 'Uncommitted files are not included.'
 Run-Native 'powershell.exe' @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $snapshot 'development/tests/Installer.Tests.ps1'))
-Run-Native 'dotnet' @('run', '--project', (Join-Path $snapshot $settings.tests), '-c', 'Release', '--', $core)
 Run-Native 'dotnet' @('build', $project, '-c', 'Release', ('-p:GameRoot=' + $game), '--nologo')
 $dll = Join-Path (Split-Path -Parent $project) ('bin\Release\' + $framework + '\' + $assembly + '.dll')
 if (!(Test-Path -LiteralPath $dll)) { throw 'The mod DLL was not produced.' }
 $dllVersion = [Diagnostics.FileVersionInfo]::GetVersionInfo($dll).ProductVersion.Split('+')[0]
 if ($dllVersion -ne $version) { throw 'DLL version does not match the project.' }
+Run-Native 'dotnet' @('run', '--project', (Join-Path $snapshot $settings.tests), '-c', 'Release', '--', $core, $dll)
 $package = Join-Path $work 'package'
 $payload = Join-Path $package '_files\payload'
 $pluginFolder = Join-Path $payload ('BepInEx\plugins\' + $settings.mod)

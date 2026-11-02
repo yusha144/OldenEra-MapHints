@@ -2,9 +2,9 @@
 
 Мод делает подсказки на карте Heroes of Might and Magic: Olden Era заметнее. Над объектами отображаются значки наград и их доступность для выбранного героя. При наведении на посещенное здание с навыками появляется список его предложений.
 
-**Версия 0.3.13.** Windows x64, Steam build 26321935, Unity 6000.0.66, BepInEx Unity.IL2CPP 6.0.0-be.788.
+**Версия 0.3.14.** Windows x64, Steam build 26321935, Unity 6000.0.66, BepInEx Unity.IL2CPP 6.0.0-be.788.
 
-[Скачать установщик 0.3.13](https://github.com/yusha144/OldenEra-MapHints/releases/download/v0.3.13/OldenEra-MapHints-0.3.13.zip) · [Все выпуски](https://github.com/yusha144/OldenEra-MapHints/releases)
+[Скачать установщик 0.3.14](https://github.com/yusha144/OldenEra-MapHints/releases/download/v0.3.14/OldenEra-MapHints-0.3.14.zip) · [Все выпуски](https://github.com/yusha144/OldenEra-MapHints/releases)
 
 Полностью распакуйте установочный архив и запустите `Install.bat` из корня, рядом с папкой `_files`. Кнопка `Code / Download ZIP` и ссылки `Source code` скачивают исходники для разработки.
 
@@ -47,7 +47,7 @@ F8 переключает три режима: все отметки, досту
 
 ## Установка
 
-Распакуйте установочный архив `OldenEra-MapHints-0.3.13.zip`, закройте игру и запустите `Install.bat`. Установщик определяет папку игры и проверяет совместимость. Для первой установки нужен интернет: зависимости загружаются с серверов BepInEx.
+Распакуйте установочный архив `OldenEra-MapHints-0.3.14.zip`, закройте игру и запустите `Install.bat`. Установщик определяет папку игры и проверяет совместимость. Для первой установки нужен интернет: зависимости загружаются с серверов BepInEx.
 
 Удаление выполняется через `Uninstall.bat`. Настройки, общий загрузчик и другие моды сохраняются. [Подробная инструкция](docs/installation.md).
 

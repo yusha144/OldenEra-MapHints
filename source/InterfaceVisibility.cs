@@ -17,6 +17,7 @@ public sealed partial class HintOverlay
 
     // Called again from OnGUI: a dialog may open after Update in the same frame.
     // Never rely on the map camera being disabled when a window is shown.
+    [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
     private bool IsMapCovered()
     {
         try
@@ -46,6 +47,7 @@ public sealed partial class HintOverlay
         }
     }
 
+    [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
     private bool IsBlockingScreen(BhScreen screen)
     {
         if (!screen || !screen.gameObject.activeInHierarchy) return false;
@@ -64,7 +66,7 @@ public sealed partial class HintOverlay
             bookView = controller && controller.gameObject.activeInHierarchy
                 && controller.canvasGroup && controller.canvasGroup.alpha > 0.01f;
         }
-        bool covered = InterfaceVisibilityRules.BlocksMap(type, true, screen.cvrc,
+        bool covered = InterfaceVisibilityRules.BlocksMap(type, true, screen.cvrd,
             screen.canvas && screen.canvas.isActiveAndEnabled, screen.cg ? screen.cg.alpha : 1f, bookView);
         if (covered && type != _lastBlockingScreen)
         {
@@ -75,6 +77,7 @@ public sealed partial class HintOverlay
         return covered;
     }
 
+    [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
     private bool OverlapsGameUi(Rect guiRect)
     {
         // Probe the badge's footprint, not the user's mouse: HUD panels cover map
@@ -86,6 +89,7 @@ public sealed partial class HintOverlay
             || HitsGameUi(new Vector2(guiRect.xMax, guiRect.yMax));
     }
 
+    [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
     private bool HitsGameUi(Vector2 guiPoint)
     {
         var events = EventSystem.current;

@@ -95,6 +95,7 @@ public sealed partial class HintOverlay : MonoBehaviour
         }
     }
 
+    [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
     private void Clear()
     {
         _markers.Clear();
@@ -105,6 +106,7 @@ public sealed partial class HintOverlay : MonoBehaviour
         _hoverPointer = IntPtr.Zero;
     }
 
+    [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
     private void Refresh(feg world)
     {
         _markers.Clear();
@@ -116,8 +118,8 @@ public sealed partial class HintOverlay : MonoBehaviour
         if (hud.cg && hud.cg.alpha < 0.05f) return;
         var hudHero = hud.cikh;
         if (hudHero == null || hudHero.cqdw == null) return;
-        // crlo is the hero used by the game's own per-hero tooltip query.
-        var hero = hudHero.cqdw.crlo;
+        // crlp is the hero used by the game's own per-hero tooltip query.
+        var hero = hudHero.cqdw.crlp;
         if (hero == null || hero.Pointer != hudHero.Pointer) return;
         var dataHero = hero.cwsy;
         if (dataHero == null || dataHero.inBattle_) return;
@@ -258,6 +260,7 @@ public sealed partial class HintOverlay : MonoBehaviour
         }
     }
 
+    [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
     private void EnsureStyles()
     {
         if (_disc) return;
@@ -276,6 +279,7 @@ public sealed partial class HintOverlay : MonoBehaviour
         _tooltipStyle.normal.textColor = Color.white;
     }
 
+    [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
     private void DrawChoiceSeparator(Rect rect, HintState state, float scale)
     {
         // A full-height, outlined gold slash stays legible over detailed terrain.
@@ -296,6 +300,7 @@ public sealed partial class HintOverlay : MonoBehaviour
         GUI.Label(rect, "/", _choiceStyle);
     }
 
+    [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
     private void DrawMarker(Rect rect, Marker marker, float scale, MarkerGlyph glyph, bool showReset)
     {
         Color accent = marker.Category switch {

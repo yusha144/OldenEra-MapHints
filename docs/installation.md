@@ -8,7 +8,7 @@ Windows x64 и установленная Heroes of Might and Magic: Olden Era, 
 
 ## 2. Установка
 
-1. Скачайте [установочный архив OldenEra-MapHints-0.3.13.zip](https://github.com/yusha144/OldenEra-MapHints/releases/download/v0.3.13/OldenEra-MapHints-0.3.13.zip).
+1. Скачайте [установочный архив OldenEra-MapHints-0.3.14.zip](https://github.com/yusha144/OldenEra-MapHints/releases/download/v0.3.14/OldenEra-MapHints-0.3.14.zip).
 2. Полностью распакуйте его в отдельную папку вне каталога игры. В корне находятся `Install.bat`, `Uninstall.bat` и папка `_files`.
 3. Закройте игру и запустите `Install.bat` из корня распакованного архива.
 4. Проверьте путь к папке с `HeroesOldenEra.exe`. Если найдено несколько копий игры, выберите нужную. Если игра не найдена, введите путь.
@@ -33,7 +33,7 @@ DLL мода устанавливается в `BepInEx/plugins/MapHints/OldenEr
 
 Откройте карту и выберите героя. У видимых объектов появляются отметки. F8 переключает все отметки, доступные награды и скрытие.
 
-В `BepInEx/LogOutput.log` успешная загрузка отмечена строкой `Map Hints 0.3.13 loaded`. Сообщение `supports Steam build 26321935 only` означает несовместимость игровых файлов.
+В `BepInEx/LogOutput.log` успешная загрузка отмечена строкой `Map Hints 0.3.14 loaded`. Сообщение `supports Steam build 26321935 only` означает несовместимость игровых файлов.
 
 Размер отметок и клавиша переключения меняются в [настройках](settings.md).
 

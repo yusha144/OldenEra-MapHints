@@ -160,3 +160,9 @@ Check(!InterfaceVisibilityRules.IsNotificationLayer("BhHUDSession"), "Notificati
 Check(!InterfaceVisibilityRules.BlocksMap("ScSaveNotification", true, true, true, 1, false), "Saving toast does not hide all map hints");
 Check(!TooltipOcclusionRules.IsVisible(true, true, 0), "A transparent notification cannot leave a persistent hole in the overlay");
 Console.WriteLine($"PASS: {checks} checks covering visits, reward knowledge, hidden random rewards, active buffs, windows, resource and stat identity, passive UI occlusion and size migration.");
+
+string pluginAssembly = args.Length > 1 ? args[1] : Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../source/bin/Release/net6.0/OldenEra.MapHints.dll"));
+InteropBoundaryChecks.Run(pluginAssembly, Check);
+ScreenStateChecks.Run(pluginAssembly);
+
+SelectedHeroChecks.Run(pluginAssembly);

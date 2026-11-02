@@ -8,6 +8,7 @@ public sealed partial class HintOverlay
     private Texture2D _drop;
     private Texture2D _randomCube;
 
+    [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
     private static IntPtr ReadHover(feg world)
     {
         if (!world || !Plugin.Instance.SkillHover.Value || Plugin.Instance.Mode.Value == DisplayMode.Off) return IntPtr.Zero;
@@ -21,6 +22,7 @@ public sealed partial class HintOverlay
         catch { return IntPtr.Zero; } // Optional preview must not disable ordinary markers.
     }
 
+    [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
     private void LogPreviewError(Exception error)
     {
         if (Time.unscaledTime < _nextErrorLog) return;
@@ -28,6 +30,7 @@ public sealed partial class HintOverlay
         _nextErrorLog = Time.unscaledTime + 15f;
     }
 
+    [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
     private void DrawManaWell(Rect rect, bool needed, float scale)
     {
         if (!_drop)
@@ -63,6 +66,7 @@ public sealed partial class HintOverlay
         GUI.Label(label, "МАНА", _iconStyle);
     }
 
+    [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
     private void DrawRewardPreview(RewardPreview preview, Vector2 mouse, float scale)
     {
         if (preview == null || preview.Offers.Count == 0) return;
@@ -110,6 +114,7 @@ public sealed partial class HintOverlay
         GUI.color = Color.white;
     }
 
+    [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
     private void DrawRandomCube(Rect rect, Color tint)
     {
         if (!_randomCube)
@@ -134,6 +139,7 @@ public sealed partial class HintOverlay
         GUI.color = Color.white;
     }
 
+    [Il2CppInterop.Runtime.Attributes.HideFromIl2Cpp]
     private static bool DrawSpriteIcon(Rect destination, Sprite sprite, Color tint)
     {
         if (!sprite || !sprite.texture) return false;
