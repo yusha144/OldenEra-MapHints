@@ -5,7 +5,7 @@
     <Nullable>disable</Nullable>
     <LangVersion>latest</LangVersion>
     <AssemblyName>OldenEra.MapHints</AssemblyName>
-    <Version>0.3.14</Version>
+    <Version>0.3.15</Version>
     <Description>Olden Era Map Hints.</Description>
   </PropertyGroup>
   <ItemGroup>

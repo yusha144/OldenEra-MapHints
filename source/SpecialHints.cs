@@ -16,8 +16,8 @@ public sealed partial class HintOverlay
         {
             var events = EventSystem.current;
             if (events && events.IsPointerOverGameObject()) return IntPtr.Zero;
-            // fln.crde is the game's current raycast target; reading it does not rerun picking.
-            return world.cpxb?.crfj?.crde?.Pointer ?? IntPtr.Zero;
+            // fln.cree is the game's current raycast target; reading it does not rerun picking.
+            return world.cpyb?.crgj?.cree?.Pointer ?? IntPtr.Zero;
         }
         catch { return IntPtr.Zero; } // Optional preview must not disable ordinary markers.
     }

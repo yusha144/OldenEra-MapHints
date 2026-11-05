@@ -12,7 +12,7 @@ internal static class BuffAvailability
     {
         try
         {
-            var rewards = bank.crhi?.cqur;
+            var rewards = bank.crii?.cqvr;
             var active = hero.buffs?.list;
             if (rewards == null || rewards.Length == 0 || active == null || active.Count == 0) return false;
             var offers = new List<BuffOffer>();
@@ -21,9 +21,9 @@ internal static class BuffAvailability
             {
                 var buffReward = reward?.TryCast<flf>();
                 if (buffReward == null) { hasOtherRewards = true; continue; }
-                var config = buffReward.cquz;
+                var config = buffReward.cqvz;
                 if (config == null) return false;
-                offers.Add(new BuffOffer(buffReward.cqux, (int)config.cdtx, ReadDurations(buffReward.cquy)));
+                offers.Add(new BuffOffer(buffReward.cqvx, (int)config.cduu, ReadDurations(buffReward.cqvy)));
             }
             if (hasOtherRewards || offers.Count == 0) return false;
             var buffs = new List<ActiveHeroBuff>();
@@ -50,7 +50,7 @@ internal static class BuffAvailability
         if (durations == null) return Array.Empty<int>();
         var types = new int[durations.Length];
         for (int index = 0; index < types.Length; index++)
-            types[index] = durations[index] == null ? -1 : (int)durations[index].cwrs;
+            types[index] = durations[index] == null ? -1 : (int)durations[index].cwss;
         return types;
     }
 }

@@ -17,9 +17,9 @@ internal static class SelectedHeroChecks
             if (reader.GetString(owner.Namespace) == "" && reader.GetString(owner.Name) == "fqt")
                 methods.Add(reader.GetString(member.Name));
         }
-        // bnwc reads the selected hero; bnwa is a different hero reference.
-        if (!methods.Contains("bnwc") || methods.Contains("bnwa"))
-            throw new Exception("Compiled map hints must read the selected hero through fqt.bnwc");
+        // bnwu reads the selected hero; bnws is a different hero reference.
+        if (!methods.Contains("bnwu") || methods.Contains("bnws"))
+            throw new Exception("Compiled map hints must read the selected hero through fqt.bnwu");
         Console.WriteLine("PASS: compiled map hints use the selected hero");
     }
 }

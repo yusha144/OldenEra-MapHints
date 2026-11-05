@@ -43,7 +43,7 @@ internal sealed class StatIcons
     private Sprite GetSprite(string id)
     {
         if (_sprites.TryGetValue(id, out var sprite) && sprite) return sprite;
-        var sprites = coh.cdwd?.cdwe;
+        var sprites = coh.cdxa?.cdxb;
         if (sprites != null && sprites.TryGetValue(id, out sprite) && sprite)
         {
             _sprites[id] = sprite;

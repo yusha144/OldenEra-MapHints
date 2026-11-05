@@ -57,20 +57,20 @@ internal sealed class SkillCatalog
 
     internal RewardPreview Read(fpj bank, int sideId)
     {
-        var sid = bank.crhg.sidConfig;
+        var sid = bank.crig.sidConfig;
         if (sid is not ("university" or "infernal_cirque" or "wise_owl")) return null;
-        var scoutings = bank.crhg.sideScoutings;
+        var scoutings = bank.crig.sideScoutings;
         var acquaintedSides = scoutings == null ? null : new int[scoutings.Count];
         if (scoutings != null)
             for (int index = 0; index < scoutings.Count; index++) acquaintedSides[index] = scoutings[index];
         if (!RewardKnowledgeRules.KnowsSkills(acquaintedSides, sideId)) return null;
         var preview = new RewardPreview {
             Title = sid switch { "university" => "Университет", "infernal_cirque" => "Зловещий театр", _ => "Мудрый сыч" },
-            HoverPointer = bank.crkb?.Pointer ?? IntPtr.Zero
+            HoverPointer = bank.crlb?.Pointer ?? IntPtr.Zero
         };
         // sideScoutings is filled by the native interaction, before the purchase.
         // Never read the resolved offers until this player has acquainted the building.
-        var rewards = bank.crhi?.cqur;
+        var rewards = bank.crii?.cqvr;
         int unresolved = 0;
         if (rewards != null)
         {
@@ -78,15 +78,15 @@ internal sealed class SkillCatalog
             {
                 var skill = reward?.TryCast<fln>();
                 if (skill == null) { unresolved++; continue; }
-                string id = skill.cqvk;
+                string id = skill.cqwk;
                 if (string.IsNullOrEmpty(id) || !_skills.TryGetValue(id, out var metadata) || metadata.Icons.Length == 0)
                 { unresolved++; continue; }
-                // Native fln.blfs uses level 3 for Max, level 1 otherwise.
-                int level = (int)skill.cqvl == 2 ? Math.Min(2, metadata.Icons.Length - 1) : 0;
+                // Native fln.blgk uses level 3 for Max, level 1 otherwise.
+                int level = (int)skill.cqwl == 2 ? Math.Min(2, metadata.Icons.Length - 1) : 0;
                 string iconId = metadata.Icons[level];
                 if (!_icons.TryGetValue(iconId, out var sprite))
                 {
-                    sprite = coh.cdwd?.cdwe?[iconId];
+                    sprite = coh.cdxa?.cdxb?[iconId];
                     _icons[iconId] = sprite;
                 }
                 string nameKey = metadata.LevelNames[level];

@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 
 namespace OldenEra.MapHints;
 
-[BepInPlugin("local.oldenera.maphints", "Olden Era Map Hints", "0.3.14")]
+[BepInPlugin("local.oldenera.maphints", "Olden Era Map Hints", "0.3.15")]
 public sealed class Plugin : BasePlugin
 {
     internal static Plugin Instance = null!;
@@ -18,8 +18,8 @@ public sealed class Plugin : BasePlugin
     internal ConfigEntry<bool> Diagnostics = null!;
     internal ConfigEntry<bool> SkillHover = null!;
     internal ConfigEntry<bool> WellPulse = null!;
-    internal const string MetadataSha = "BB50ABC2B3CBFCFA61617674A723761A5542831C263A34C6A70486840863F846";
-    internal const string AssemblySha = "20AD026C2E10ABFCB17320E8174B611551857B5D97D59BEBC29142B28CA45CB3";
+    internal const string MetadataSha = "C40298DE4A952A0CE5158BF07C392335EEA1F6B39B544101FF04B974794D1105";
+    internal const string AssemblySha = "D5C932FC0E22BE3049204773CF2A9CC57F6A84D08540921D99506D53B96386E2";
 
     public override void Load()
     {
@@ -42,11 +42,11 @@ public sealed class Plugin : BasePlugin
         if (!Matches(Path.Combine(root, "HeroesOldenEra_Data", "il2cpp_data", "Metadata", "global-metadata.dat"), MetadataSha)
             || !Matches(Path.Combine(root, "GameAssembly.dll"), AssemblySha))
         {
-            Log.LogWarning("Map Hints disabled: this version supports Steam build 26321935 only. No game patches applied.");
+            Log.LogWarning("Map Hints disabled: this version supports Steam build 26428102 only. No game patches applied.");
             return;
         }
         AddComponent<HintOverlay>();
-        Log.LogInfo($"Map Hints 0.3.14 loaded. Marker scale={MarkerScale.Value}. {CycleKey.Value} cycles All / Available / Off; configure OldenEra.hotkeys.cfg.");
+        Log.LogInfo($"Map Hints 0.3.15 loaded. Marker scale={MarkerScale.Value}. {CycleKey.Value} cycles All / Available / Off; configure OldenEra.hotkeys.cfg.");
     }
 
     private static bool Matches(string path, string expected)

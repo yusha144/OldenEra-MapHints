@@ -14,17 +14,17 @@ internal sealed class BuffIcons
         try
         {
             // Read only the existing offer, never generate or apply an effect.
-            var rewards = bank.crhi?.cqur;
+            var rewards = bank.crii?.cqvr;
             if (rewards == null) return null;
             var icons = new List<MarkerGlyph>();
             var seen = new HashSet<string>(StringComparer.Ordinal);
             foreach (var reward in rewards)
             {
-                var config = reward?.TryCast<flf>()?.cquz;
+                var config = reward?.TryCast<flf>()?.cqvz;
                 if (config == null || config.hidden) continue;
-                // BhHeroBuffView.bdah uses this exact LogicBuffConfig icon ID
+                // BhHeroBuffView.bdaw uses this exact LogicBuffConfig icon ID
                 // with coh.tak when drawing effects in the hero's inventory.
-                string iconId = config.cvnp;
+                string iconId = config.cvop;
                 if (string.IsNullOrEmpty(iconId) || !seen.Add(iconId)) continue;
                 icons.Add(new MarkerGlyph { Icon = GetSprite(iconId), Fallback = "+" });
             }
@@ -42,7 +42,7 @@ internal sealed class BuffIcons
         if (_sprites.TryGetValue(id, out var sprite) && sprite) return sprite;
         // Same catalog as the hero profile. Avoid its generic missing-icon
         // replacement: keep '+' until the real sprite has finished loading.
-        var sprites = coh.cdwd?.cdwe;
+        var sprites = coh.cdxa?.cdxb;
         if (sprites != null && sprites.TryGetValue(id, out sprite) && sprite)
         {
             _sprites[id] = sprite;
