@@ -55,6 +55,8 @@
 
 [Сообщить об ошибке](https://github.com/yusha144/OldenEra-MapHints/issues/new?template=bug_report.yml) · [Предложить улучшение](https://github.com/yusha144/OldenEra-MapHints/discussions/categories/ideas) · [Обсуждение](https://github.com/yusha144/OldenEra-MapHints/discussions/categories/general) · [Вопрос по установке](https://github.com/yusha144/OldenEra-MapHints/discussions/categories/q-a)
 
+Для связи с автором в Discord используйте имя `@yusha144`.
+
 ## Исходники и лицензия
 
 `source/` содержит код мода, `installer/` установщик, `docs/` инструкции, `development/` сборку и проверки. [Руководство разработчика](https://github.com/yusha144/OldenEra-MapHints/tree/main/development).
