@@ -4,7 +4,7 @@
 
 **Версия 0.3.15.** Windows x64, Steam build 26428102, Unity 6000.0.66, BepInEx Unity.IL2CPP 6.0.0-be.788.
 
-[Скачать установщик 0.3.15](https://github.com/yusha144/OldenEra-MapHints/releases/download/v0.3.15/OldenEra-MapHints-0.3.15.zip) · [Все выпуски](https://github.com/yusha144/OldenEra-MapHints/releases)
+[Скачать установщик 0.3.16](https://github.com/yusha144/OldenEra-MapHints/releases/download/v0.3.16/OldenEra-MapHints-0.3.15.zip) · [Все выпуски](https://github.com/yusha144/OldenEra-MapHints/releases)
 
 Скачайте установочный ZIP по ссылке выше и распакуйте его целиком. Закройте игру и запустите `Install.bat` из распакованного архива.
 
